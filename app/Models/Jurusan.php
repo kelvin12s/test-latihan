@@ -7,5 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Jurusan extends Model
 {
-    use HasFactory;
+    protected $table = 'table_jurusan';
+
+     protected $fillable = [
+        'Kode_Jurusan',
+        'Nama_Jurusan'
+    ];
 }

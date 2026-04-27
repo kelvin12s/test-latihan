@@ -8,58 +8,73 @@ use Illuminate\Http\Request;
 class MataKuliahController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Menampilkan daftar semua dosen
      */
     public function index()
     {
-        //
+        $matakuliah = MataKuliah::all();
+        return view('matakuliah.index', compact('matakuliah'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Menampilkan form tambah dosen
      */
     public function create()
     {
-        //
+        return view('matakuliah.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Menyimpan data dosen baru
      */
     public function store(Request $request)
     {
-        //
+        // Mengambil semua data dari form kecuali token
+        $data = $request->except('_token');
+        
+        MataKuliah::create($data);
+
+        return redirect()->route('matakuliah.index');
     }
 
     /**
-     * Display the specified resource.
+     * Menampilkan form edit dosen berdasarkan ID
      */
-    public function show(MataKuliah $mataKuliah)
+    public function edit($id)
     {
-        //
+        // Menggunakan find() agar lebih stabil mencari ID
+        $matakuliah = MataKuliah::find($id);
+        
+        if (!$matakuliah) {
+            return redirect()->route('matakuliah.index')->with('error', 'Data tidak ditemukan');
+        }
+
+        return view('matakuliah.edit', compact('matakuliah'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Memperbarui data dosen di database
      */
-    public function edit(MataKuliah $mataKuliah)
+    public function update(Request $request, $id)
     {
-        //
+        $matakuliah = MataKuliah::find($id);
+        
+        // Mengambil semua data form kecuali token dan method PUT
+        $data = $request->except(['_token', '_method']);
+        
+        $matakuliah->update($data);
+
+        return redirect()->route('matakuliah.index');
     }
 
     /**
-     * Update the specified resource in storage.
+     * Menghapus data dosen
      */
-    public function update(Request $request, MataKuliah $mataKuliah)
+    public function destroy($id)
     {
-        //
-    }
+        $matakuliah = MataKuliah::find($id);
+        $matakuliah->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(MataKuliah $mataKuliah)
-    {
-        //
+        return redirect()->route('matakuliah.index');
     }
 }

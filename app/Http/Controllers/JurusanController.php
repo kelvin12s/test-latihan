@@ -8,58 +8,73 @@ use Illuminate\Http\Request;
 class JurusanController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Menampilkan daftar semua dosen
      */
     public function index()
     {
-        // SELECT ALL
+        $jurusan = Jurusan::all();
+        return view('jurusan.index', compact('jurusan'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Menampilkan form tambah dosen
      */
     public function create()
     {
-        //
+        return view('jurusan.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Menyimpan data dosen baru
      */
     public function store(Request $request)
     {
-        // SAVE DATA
+        // Mengambil semua data dari form kecuali token
+        $data = $request->except('_token');
+        
+        Jurusan::create($data);
+
+        return redirect()->route('jurusan.index');
     }
 
     /**
-     * Display the specified resource.
+     * Menampilkan form edit dosen berdasarkan ID
      */
-    public function show(Jurusan $jurusan)
+    public function edit($id)
     {
-        // SELECT SPESIFIK
+        // Menggunakan find() agar lebih stabil mencari ID
+        $jurusan = Jurusan::find($id);
+        
+        if (!$jurusan) {
+            return redirect()->route('jurusan.index')->with('error', 'Data tidak ditemukan');
+        }
+
+        return view('jurusan.edit', compact('jurusan'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Memperbarui data dosen di database
      */
-    public function edit(Jurusan $jurusan)
+    public function update(Request $request, $id)
     {
-        //
+        $jurusan = Jurusan::find($id);
+        
+        // Mengambil semua data form kecuali token dan method PUT
+        $data = $request->except(['_token', '_method']);
+        
+        $jurusan->update($data);
+
+        return redirect()->route('jurusan.index');
     }
 
     /**
-     * Update the specified resource in storage.
+     * Menghapus data dosen
      */
-    public function update(Request $request, Jurusan $jurusan)
+    public function destroy($id)
     {
-        // UPDATE DATA
-    }
+        $jurusan = Jurusan::find($id);
+        $jurusan->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Jurusan $jurusan)
-    {
-        // DELETE DATA
+        return redirect()->route('jurusan.index');
     }
 }
