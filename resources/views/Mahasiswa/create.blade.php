@@ -16,7 +16,7 @@
                 <td><input type="text" name="Fullname"></td>
             </tr>
             <tr>
-                <td>Nomor Induk Mahasiswa</td>
+                <td>Nomor Induk Mahasiswas</td>
                 <td>:</td>
                 <td><input type="text" name="NIM"></td>
             </tr>
